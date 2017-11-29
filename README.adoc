@@ -1,0 +1,9 @@
+= demo-rest-back
+:icons: font
+:toc:
+:nofooter:
+:source-highlighter: prettify
+
+Back end de la démo REST.
+
+NOTE: Le code est généré par Swagger
