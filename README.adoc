@@ -7,3 +7,13 @@
 Back end de la démo REST.
 
 NOTE: Le code est généré par Swagger
+
+== Tests
+
+Des tests sont présents :
+
+* les tests unitaires qui peuvent être lancés avec `mvn test`
+* les test d'intégration qui peuvent être lancés avec `mvn integration-test`
+
+== WS
+Une api Swagger est disponible
