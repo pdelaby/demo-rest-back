@@ -1,4 +1,4 @@
-package com.pdy.fac.demorestback.api;
+package com.pdy.fac.demorestback.commons;
 
 import javax.xml.bind.annotation.XmlTransient;
 

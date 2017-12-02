@@ -17,3 +17,8 @@ Des tests sont présents :
 
 == WS
 Une api Swagger est disponible
+
+== TODO
+* Des tests cucumber d'intégration
+* Un smoke test ?
+* Générer la doc asciidoc

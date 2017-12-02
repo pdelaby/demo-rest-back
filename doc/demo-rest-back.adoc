@@ -1,0 +1,17 @@
+= Faire fonctionner asciidoc =
+:icons: font
+:toc:
+:nofooter:
+:source-highlighter: coderay
+:stylesheet: github.css
+
+
+== URLs
+
+* version : http://localhost:8080/demo-rest-back/version
+* swagger : http://localhost:8080/demo-rest-back/swagger-ui.html
+
+== Base de données
+Console : http://localhost:8080/demo-rest-back/console/
+
+Se connecter avec `jdbc:h2:mem:example-app`

@@ -1,4 +1,4 @@
-package com.pdy.fac.demorestback.api.version;
+package com.pdy.fac.demorestback.version;
 
 public class Version {
 

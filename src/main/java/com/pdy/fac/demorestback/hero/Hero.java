@@ -1,29 +1,30 @@
-package com.pdy.fac.demorestback.model;
+package com.pdy.fac.demorestback.hero;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pdy.fac.demorestback.commons.Mappable;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Hero
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-26T17:01:12.391Z")
 
-public class Hero {
+public class Hero implements Mappable {
+
 	@JsonProperty("id")
-	private Long id = null;
+	private String id = null;
 
 	@JsonProperty("name")
 	private String name = null;
 
-	public Hero id(final Long id) {
+	public Hero id(final String id) {
 		this.id = id;
 		return this;
 	}
 
-	public Hero(final Long id, final String name) {
+	public Hero(final String id, final String name) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -40,11 +41,11 @@ public class Hero {
 	 **/
 	@ApiModelProperty(value = "")
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
