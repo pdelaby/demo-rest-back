@@ -9,6 +9,9 @@ server:
   por: 8080
 
 
+endpoints:
+  health:
+    enabled: false
 ###
 #   Database Settings
 ###
@@ -32,7 +35,7 @@ spring:
   database-platform: org.hibernate.dialect.H2Dialect
   properties:
    hibernate:
-    show_sql: true
+    show_sql: false
     use_sql_comment: false
     format_sql: false
  h2:

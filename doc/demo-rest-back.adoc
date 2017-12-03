@@ -15,3 +15,9 @@
 Console : http://localhost:8080/demo-rest-back/console/
 
 Se connecter avec `jdbc:h2:mem:example-app`
+
+
+== Health
+Le mien est dans `http://localhost:8080/demo-rest-back/health`
+
+J'ai désactivé celui de Spring en passant par application.machin

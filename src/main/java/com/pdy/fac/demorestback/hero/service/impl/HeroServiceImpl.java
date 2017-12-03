@@ -3,6 +3,8 @@ package com.pdy.fac.demorestback.hero.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.pdy.fac.demorestback.hero.repository.entities.HeroEntity;
 import com.pdy.fac.demorestback.hero.service.HeroService;
 
 @Service
+@Transactional
 public class HeroServiceImpl implements HeroService {
 
 	@Autowired

@@ -3,7 +3,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.pdy.fac.demorestback.api;
+package com.pdy.fac.demorestback.hero.api;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.pdy.fac.demorestback.model.Hero;
+import com.pdy.fac.demorestback.hero.Hero;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +44,7 @@ public interface HeroApi {
 
 	@RequestMapping(value = "/hero/{heroId}", produces = { "application/json" }, method = RequestMethod.DELETE)
 	ResponseEntity<Void> deleteHero(
-			@ApiParam(value = "Id du héro à supprimer", required = true) @PathVariable("heroId") Long heroId);
+			@ApiParam(value = "Id du héro à supprimer", required = true) @PathVariable("heroId") String heroId);
 
 	@ApiOperation(value = "Trouve un héro par son ID et le retourne", notes = "Retourne un simple héro", response = Hero.class, tags = {
 			"hero", })
@@ -53,7 +53,7 @@ public interface HeroApi {
 			@ApiResponse(code = 404, message = "Héro non trouvé", response = Void.class) })
 	@RequestMapping(value = "/hero/{heroId}", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Hero> getHeroById(
-			@ApiParam(value = "ID du héro à retourner", required = true) @PathVariable("heroId") Long heroId);
+			@ApiParam(value = "ID du héro à retourner", required = true) @PathVariable("heroId") String heroId);
 
 	@ApiOperation(value = "Récupère la liste des héros, éventuellement avec un no", notes = "", response = Hero.class, responseContainer = "List", tags = {
 			"hero", })
@@ -70,7 +70,7 @@ public interface HeroApi {
 	@RequestMapping(value = "/hero/{heroId}", produces = { "application/xml" }, consumes = {
 	"application/json" }, method = RequestMethod.PUT)
 	ResponseEntity<Hero> updateHero(
-			@ApiParam(value = "ID du héro à mettre à jour", required = true) @PathVariable("heroId") Long heroId,
+			@ApiParam(value = "ID du héro à mettre à jour", required = true) @PathVariable("heroId") String heroId,
 			@ApiParam(value = "Le héro qu'il faut mettre à jour", required = true) @Valid @RequestBody Hero body);
 
 }

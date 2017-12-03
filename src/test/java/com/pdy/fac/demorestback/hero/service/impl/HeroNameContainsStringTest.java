@@ -1,18 +1,16 @@
 package com.pdy.fac.demorestback.hero.service.impl;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import com.pdy.fac.demorestback.hero.repository.entities.HeroEntity;
 
-class HeroNameContainsStringTest {
+public class HeroNameContainsStringTest {
 
 	private HeroNameContainsString subject;
 
 	@Test
-	@DisplayName("Shoud be ok when same name")
-	void shoudBeOkWhenSameName() {
+	public void shoudBeOkWhenSameName() {
 		// Given
 		subject = new HeroNameContainsString("test");
 		final HeroEntity hero = new HeroEntity("34l", "test");
@@ -22,8 +20,7 @@ class HeroNameContainsStringTest {
 	}
 
 	@Test
-	@DisplayName("Shoud be ok when names contains only partial")
-	void shoudBeOkWhenContainsPartial() {
+	public void shoudBeOkWhenContainsPartial() {
 		// Given
 		subject = new HeroNameContainsString("ar");
 		final HeroEntity hero = new HeroEntity("34l", "Marcel");
@@ -33,8 +30,7 @@ class HeroNameContainsStringTest {
 	}
 
 	@Test
-	@DisplayName("Shoud be ok when names contains only partial with not same case")
-	void shoudBeOkWhenContainsPartialWithNotSameCase() {
+	public void shoudBeOkWhenContainsPartialWithNotSameCase() {
 		// Given
 		subject = new HeroNameContainsString("Ar");
 		final HeroEntity hero = new HeroEntity("34l", "MaRcel");
@@ -45,8 +41,7 @@ class HeroNameContainsStringTest {
 
 
 	@Test
-	@DisplayName("Shoud be ko if hero name is null")
-	void shoudBeKoWhenHeroNameIsNull() {
+	public void shoudBeKoWhenHeroNameIsNull() {
 		// Given
 		subject = new HeroNameContainsString("Ar");
 		final HeroEntity hero = new HeroEntity("34l", null);
