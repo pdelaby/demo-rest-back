@@ -2,8 +2,7 @@ package com.pdy.fac.demorestback.hero.service.impl;
 
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.pdy.fac.demorestback.commons.AppliStringUtils;
 import com.pdy.fac.demorestback.hero.repository.entities.HeroEntity;
 
 public class HeroNameContainsString implements Predicate<HeroEntity> {
@@ -16,7 +15,7 @@ public class HeroNameContainsString implements Predicate<HeroEntity> {
 
 	@Override
 	public boolean test(final HeroEntity hero) {
-		return StringUtils.containsIgnoreCase(hero.getNom(), partial);
+		return AppliStringUtils.containsIgnoreCaseAndSpecialChars(hero.getNom(), partial);
 	}
 
 }

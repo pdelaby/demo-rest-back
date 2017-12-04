@@ -101,6 +101,12 @@ public class HeroAPIIntegrationStepdef {
 		Assert.assertTrue(isPresent);
 	}
 
+	@Then("^l'un d'entre eux à l'id stocké$")
+	public void l_un_d_entre_eux_a_le_bon_id() throws Throwable {
+		final boolean isPresent = heroes.stream().filter(h -> StringUtils.equals(stockedId, h.getId())).findAny().isPresent();
+		Assert.assertTrue(isPresent);
+	}
+
 	@Then("^le héro n'est pas trouvé$")
 	public void heroNotFound() throws Throwable {
 		BDDAssertions.then(responseOneEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

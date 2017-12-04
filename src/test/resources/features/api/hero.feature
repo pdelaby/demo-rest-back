@@ -1,5 +1,3 @@
-# language: en
-# encoding: utf8
 Feature: Hero 
   Création, modification, récupération et suppression de héros dans des cas usuels 
  
@@ -13,7 +11,25 @@ Feature: Hero
     Given je crée un héro nommé 'SuperGirl' 
     When je recherche les héros dont le nom contient 'Rgi'
     Then le système réponds une liste de héros
-    And l'un d'entre eux s'appelle 'SuperGirl' 
+    And l'un d'entre eux s'appelle 'SuperGirl'
+    
+  Scenario Outline: Recherche une chaîne dans le nom d'un héro 
+   Given je crée un héro nommé '<nom>' 
+     And je stocke son id  
+    When je recherche les héros dont le nom contient '<chaine>'
+    Then le système réponds une liste de héros
+    And l'un d'entre eux à l'id stocké
+    Examples:
+        | nom 		| chaine 	|
+ 	    | Batman    | Batman 	|
+ 	    | Batman    | BATMAN 	|
+ 	    | BATMAN    | batman    |
+ 	    | Batman    | man 		|
+ 	    | Gérard    | gerard	|
+ 	    | Gerard    | gérard	|
+ 	    | Gerard    | gérard	|
+ 	    | Jérôme    | erO	    |
+ 	    | PetitCœur | coeur		|
     
   Scenario: Suppression d'un héro
     Given je crée un héro nommé 'Spiderman'

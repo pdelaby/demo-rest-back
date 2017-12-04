@@ -39,6 +39,26 @@ public class HeroNameContainsStringTest {
 		Assert.assertTrue(subject.test(hero));
 	}
 
+	@Test
+	public void shoudBeOkWhenAccents() {
+		// Given
+		subject = new HeroNameContainsString("léle");
+		final HeroEntity hero = new HeroEntity("34l", "lelê");
+
+		// Then
+		Assert.assertTrue(subject.test(hero));
+	}
+
+	@Test
+	public void shoudBeOkWhenOdansE() {
+		// Given
+		subject = new HeroNameContainsString("coeur");
+		final HeroEntity hero = new HeroEntity("34l", "cœur");
+
+		// Then
+		Assert.assertTrue(subject.test(hero));
+	}
+
 
 	@Test
 	public void shoudBeKoWhenHeroNameIsNull() {
@@ -49,7 +69,4 @@ public class HeroNameContainsStringTest {
 		// Then
 		Assert.assertFalse(subject.test(hero));
 	}
-
-
-
 }
