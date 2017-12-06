@@ -52,8 +52,8 @@ public class HeroServiceImpl implements HeroService {
 	public List<Hero> findByNameContaining(final String name) {
 		return heroRepository
 				.findAll()
-				.stream().
-				filter(new HeroNameContainsString(name))
+				.stream()
+				.filter(new HeroNameContainsString(name))
 				.map(heroToDtoConverter)
 				.collect(Collectors.toList());
 	}
