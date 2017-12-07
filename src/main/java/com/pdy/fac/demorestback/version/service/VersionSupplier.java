@@ -7,6 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.pdy.fac.demorestback.version.Version;
 
+/**
+ * Lit la version depuis le pom en utilisant mvn filters : 
+ * un placeholder est placé dans applications.properties
+ * maven resource	
+ * @author pdelaby
+ *
+ */
 @Service
 public class VersionSupplier implements Supplier<Version> {
 

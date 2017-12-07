@@ -1,0 +1,52 @@
+= Faire fonctionner asciidoc =
+:icons: font
+:toc: left
+:nofooter:
+:source-highlighter: coderay
+ifndef::sourcedir[:sourcedir: ../main/java]
+:revnumber: {project-version}
+
+== URLs
+
+* version : http://localhost:8080/demo-rest-back/version
+* swagger : http://localhost:8080/demo-rest-back/swagger-ui.html
+
+== Base de données
+Console : http://localhost:8080/demo-rest-back/console/
+
+Se connecter avec `jdbc:h2:mem:example-app`
+
+
+== Health
+Le mien est dans `http://localhost:8080/demo-rest-back/health`
+
+J'ai désactivé celui de Spring en passant par application.machin
+
+== Version
+La version est récupérée du POM :
+
+* Dans `application.yaml`, on set un placeholder : `info.build.version: '@project.version@'`
+* Dans le POM , on active le filtering afin que Maven remplace le placeholder par la vraie valeur
+
+.POM.XML
+[source, xml]
+----
+<build>
+<!-- Le filtering va remplacer les références dans le application.yaml par les vraies version -->
+ <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+      <filtering>true</filtering>
+    </resource>
+  </resources>
+  <!-- ... -->
+</build>
+----
+* On récupère la valeur à l'endroit souhaité en utilisant value :
+
+[source, java]
+.IdSupplier.java
+----
+@Value("${info.build.version}")
+private String buildVersion;
+----
