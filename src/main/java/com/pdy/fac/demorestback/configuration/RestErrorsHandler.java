@@ -28,7 +28,7 @@ public class RestErrorsHandler {
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	@ResponseBody
 	public ResponseEntity<Void> handleNotFoundException(final ElementNotFound e) {
-		LOGGER.error("L'entite n'a pas été trouvée", e);
+		LOGGER.warn("L'entite n'a pas été trouvée", e);
 		return ResponseEntity.notFound().build();
 	}
 

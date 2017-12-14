@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pdy.fac.demorestback.commons.functionnal.FxChain;
 import com.pdy.fac.demorestback.hero.Hero;
 import com.pdy.fac.demorestback.hero.service.HeroService;
 
@@ -29,8 +30,7 @@ public class HeroApiController implements HeroApi {
 	@Override
 	public ResponseEntity<Hero> addHero(
 			@ApiParam(value = "Le héro qu'il faut ajouter", required = true) @Valid @RequestBody final Hero body) {
-		final Hero addHero = heroService.addHero(body);
-		return ResponseEntity.ok(addHero);
+		return FxChain.supplyVal(body).then(heroService::addHero).then(ResponseEntity::ok).get();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class HeroApiController implements HeroApi {
 	@Override
 	public ResponseEntity<Hero> getHeroById(
 			@ApiParam(value = "ID du héro à retourner", required = true) @PathVariable("heroId") final String heroId) {
-		return ResponseEntity.ok(heroService.findById(heroId));
+		return FxChain.supplyVal(heroId).then(heroService::findById).then(ResponseEntity::ok).get();
 	}
 
 	@Override

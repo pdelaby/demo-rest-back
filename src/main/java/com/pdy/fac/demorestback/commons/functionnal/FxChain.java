@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * Function1.of() ou Function.andThen(), à la différence que la valeur est
  * utilisée au début au lieu d'être apply(v) à la fin.
  * 
- * @author PDY/Atos
+ * @author Pierre Delaby
  *
  */
 public abstract class FxChain {

@@ -4,7 +4,14 @@ pipeline {
         maven 'M3' 
         jdk 'jdk8u125'
     }
-    stages {      
+    environment {
+      def props = readProperties  file:'/var/lib/jenkins/jobconf/tomcat.properties'
+      def deployUrl= "${props['tomcat.deploy.url']}"
+	  // obligatoire car il est impossible de resourdre workspace dans l'appel
+      def warPath = "${workspace}/target"
+    }
+    stages {    
+                 
         stage('Clean'){
             steps{
                 sh "mvn clean"
@@ -32,6 +39,17 @@ pipeline {
         stage('Results') {
             steps{
                 archiveArtifacts artifacts: 'target/*.war'
+            }
+        }
+        stage('Deploy'){
+            steps{
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'tomcatdeploy', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+				    //  undeploy 
+                    sh 'wget --http-user=$USERNAME --http-password=$PASSWORD "${deployUrl}/manager/text/undeploy?path=/demo-rest-back" -O -'
+					
+					// deploy
+                    sh 'wget --http-user=$USERNAME --http-password=$PASSWORD "${deployUrl}/manager/text/deploy?war=file:${warPath}/demo-rest-back.war&path=/demo-rest-back" -O -'
+                }
             }
         }
     }

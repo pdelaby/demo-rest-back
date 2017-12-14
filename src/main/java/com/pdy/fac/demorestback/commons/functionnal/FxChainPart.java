@@ -9,7 +9,7 @@ public interface FxChainPart<O> extends Supplier<O>{
 
 	/**
 	 * Applique la chaîne de fonctions sur la valeur, et retourne le résultat
-	 * @return
+	 * @return le résultat de toute la chaîne calculée
 	 */
 	O resolve();
 
