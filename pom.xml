@@ -112,7 +112,6 @@
 
 					<!-- Attributes common to all output formats -->
 					<attributes>
-						<test>TRALALA</test>
 						<sourcedir>${project.build.sourceDirectory}</sourcedir>
 						<project-version>${project.version}</project-version>
 					</attributes>
