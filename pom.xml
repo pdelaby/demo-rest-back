@@ -16,10 +16,13 @@
 
 		<!-- Test -->
 		<cucumber.version>1.2.5</cucumber.version>
-		
+
 		<!-- Cucumber -->
 		<asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
-        <asciidoctorj.version>1.5.6</asciidoctorj.version>
+		<asciidoctorj.version>1.5.6</asciidoctorj.version>
+
+		<!-- javadoc sans problèmes -->
+		<additionalparam>-Xdoclint:none</additionalparam>
 	</properties>
 
 	<parent>
@@ -31,7 +34,8 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
-		<!-- Le filtering va remplacer les références dans le application.yaml par les vraies version -->
+		<!-- Le filtering va remplacer les références dans le application.yaml 
+			par les vraies version -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -39,6 +43,49 @@
 			</resource>
 		</resources>
 		<plugins>
+
+			<!-- Swagger -->
+			<!-- https://github.com/kongchen/swagger-maven-plugin/issues/467 -->
+			<plugin>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>3.1.5</version>
+				<configuration>
+					<apiSources>
+						<apiSource>
+							<schemes>http,https</schemes>
+							<!-- <basePath>/api</basePath> -->
+							<info>
+								<title>Hero Rest Demo</title>
+								<version>${project.version}</version>
+							</info>
+							<locations>
+								<location>com.pdy.fac.demorestback.hero.api</location>
+								<location>com.pdy.fac.demorestback.hero.api.HeroApi</location>
+								<location>com.pdy.fac.demorestback.hero.api.HeroApiController</location>
+								<location>com.pdy.fac.demorestback.version.api</location>
+								<location>com.pdy.fac.demorestback.version.api.VersionApi</location>
+							</locations>
+							<outputFormats>html</outputFormats>
+							<!-- <attachSwaggerArtifact>false</attachSwaggerArtifact> -->
+							<springmvc>false</springmvc>
+							<swaggerDirectory>${project.build.directory}/swagger-ui</swaggerDirectory>
+						</apiSource>
+					</apiSources>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- fin swagger -->
+
+
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -52,7 +99,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
+				<configuration>
 					<!-- Skip the default running of this plug-in (or everything is run 
 						twice...see below) -->
 					<skip>true</skip>
@@ -72,7 +119,6 @@
 							<includes>
 								<!-- Include unit tests within integration-test phase. -->
 								<include>**/*Test.java</include>
-								<include>**/HeroNameContainsStringTest.java</include>
 							</includes>
 							<excludes>
 								<!-- Exclude integration tests within (unit) test phase. -->
@@ -98,96 +144,62 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>${asciidoctor.maven.plugin.version}</version>              
-                <configuration>
-                    <sourceDirectory>src/doc</sourceDirectory>
-  
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>${asciidoctor.maven.plugin.version}</version>
+				<configuration>
+					<sourceDirectory>src/doc</sourceDirectory>
+
 					<!-- Attributes common to all output formats -->
-                    <attributes>
-                        <test>TRALALA</test>
-                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
-                        <project-version>${project.version}</project-version>
-                    </attributes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>asciidoc-to-html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
-                            <!--
-                            Scenarios for linking vs embedding assets:
-
-                            Link to both stylesheets and images::
-
-                              - don't set embedAssets option
-                              - set linkcss attribute to true
-                              - set imagesdir attribute to path relative to AsciiDoc source file
-
-                              <attributes>
-                                  <linkcss>true</linkcss>
-                                  <imagesdir>./images</imagesdir>
-                              </attributes>
-
-                            Embed stylesheets and images::
-                            
-                              - set embedAssets option to true
-                              - don't set linkcss attribute
-                              - set imagesdir attribute to path relative to project root
-
-                              <embedAssets>true</embedAssets>
-                              <attributes>
-                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
-                              </attributes>
-
-                            Link to stylesheets but embed images::
-                            
-                              - set embedAssets option to true
-                              - set linkcss attribute to true
-                              - set imagesdir attribute to path relative to project root
-
-                              <embedAssets>true</embedAssets>
-                              <attributes>
-                                  <linkcss>true</linkcss>
-                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
-                              </attributes>
-
-                            Embed stylesheets but link images (default)::
-                            
-                              - don't set embedAssets option
-                              - don't set linkcss attribute
-                              - set imagesdir attribute to path relative to AsciiDoc source file
-
-                              <attributes>
-                                  <imagesdir>./images</imagesdir>
-                              </attributes>
-
-                            IMPORTANT: When you enable image embedding, you must qualify the path the the imagesdir, as shown above.
-                            -->
-                            <attributes>
-<!--                                 <imagesdir>./images</imagesdir> -->
-                                <toc>left</toc>
-                                <icons>font</icons>
-                                <sectanchors>true</sectanchors>
-                                <!-- set the idprefix to blank -->
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <docinfo1>true</docinfo1>
-								<source-highlighter>coderay</source-highlighter> 
-                            </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-			
+					<attributes>
+						<test>TRALALA</test>
+						<sourcedir>${project.build.sourceDirectory}</sourcedir>
+						<project-version>${project.version}</project-version>
+					</attributes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>asciidoc-to-html</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>html5</backend>
+							<sourceHighlighter>coderay</sourceHighlighter>
+							<!-- Scenarios for linking vs embedding assets: Link to both stylesheets 
+								and images:: - don't set embedAssets option - set linkcss attribute to true 
+								- set imagesdir attribute to path relative to AsciiDoc source file <attributes> 
+								<linkcss>true</linkcss> <imagesdir>./images</imagesdir> </attributes> Embed 
+								stylesheets and images:: - set embedAssets option to true - don't set linkcss 
+								attribute - set imagesdir attribute to path relative to project root <embedAssets>true</embedAssets> 
+								<attributes> <imagesdir>src/docs/asciidoc/images</imagesdir> </attributes> 
+								Link to stylesheets but embed images:: - set embedAssets option to true - 
+								set linkcss attribute to true - set imagesdir attribute to path relative 
+								to project root <embedAssets>true</embedAssets> <attributes> <linkcss>true</linkcss> 
+								<imagesdir>src/docs/asciidoc/images</imagesdir> </attributes> Embed stylesheets 
+								but link images (default):: - don't set embedAssets option - don't set linkcss 
+								attribute - set imagesdir attribute to path relative to AsciiDoc source file 
+								<attributes> <imagesdir>./images</imagesdir> </attributes> IMPORTANT: When 
+								you enable image embedding, you must qualify the path the the imagesdir, 
+								as shown above. -->
+							<attributes>
+								<!-- <imagesdir>./images</imagesdir> -->
+								<toc>left</toc>
+								<icons>font</icons>
+								<sectanchors>true</sectanchors>
+								<!-- set the idprefix to blank -->
+								<idprefix />
+								<idseparator>-</idseparator>
+								<docinfo1>true</docinfo1>
+								<source-highlighter>coderay</source-highlighter>
+							</attributes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -293,6 +305,8 @@
 			<version>1.1.0.Final</version>
 			<scope>provided</scope>
 		</dependency>
+
+
 	</dependencies>
 
 </project>
