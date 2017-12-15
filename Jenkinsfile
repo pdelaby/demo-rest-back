@@ -14,30 +14,19 @@ pipeline {
     }
 	
     stages {    
-                 
-        stage('Clean'){
-            steps{
-                sh "mvn clean"
-            }
-        }
-        
+                         
         stage('Test'){
             steps{
-                sh "mvn test"
+                sh "mvn clean test"
             }
         }
         
         stage('Package'){
             steps{
                 sh "mvn package"
+				archiveArtifacts artifacts: 'target/*.war'
             }
-        }
-		
-		stage('Archivage des artefacts') {
-            steps{
-                archiveArtifacts artifacts: 'target/*.war'
-            }
-        }
+        }		
         
 		stage('Integration'){
             steps{
