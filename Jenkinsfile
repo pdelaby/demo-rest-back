@@ -8,11 +8,13 @@ pipeline {
       def props = readProperties  file:'/var/lib/jenkins/jobconf/tomcat.properties'
       def deployUrl= "${props['tomcat.deploy.url']}"
       def tcatPath= "${props['tomcat.path']}"
+	  
 	  // obligatoire car il est impossible de resourdre workspace dans l'appel
       def warPath = "${workspace}/target"
     }
+	
     stages {    
-               
+                 
         stage('Clean'){
             steps{
                 sh "mvn clean"
@@ -39,11 +41,12 @@ pipeline {
         
 		stage('Integration'){
             steps{
-                sh "mvn integration-test"
+				// passe les tests d'integration
+                sh "mvn integration-test"				
             }
         }
     
-        
+		
         stage('Javadoc'){
             steps{
                 sh "mvn javadoc:javadoc"
@@ -62,7 +65,7 @@ pipeline {
             }
         }
         
-        stage('Deploy Documentation'){
+        stage('Documentation'){
             parallel {
                 stage('Deploy asciidoc'){
                     steps{
@@ -74,6 +77,17 @@ pipeline {
                         sh "cp -R target/site/apidocs/* ${tcatPath}/webapps/demo-rest-back-javadoc"
                     }
                 }
+            
+                stage('Publish asciidoc'){
+                    steps{
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/generated-docs', reportFiles: 'demo-rest-back.html', reportName: 'Doc', reportTitles: 'documentation'])
+                    }
+                }
+                stage('Publish javadoc'){
+                    steps{
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site/apidocs', reportFiles: 'index.html', reportName: 'JavaDoc', reportTitles: 'JavaDoc'])
+                    }
+                }
             }
         }
     }
@@ -81,20 +95,15 @@ pipeline {
     
     post{
         always{
-            // enregistre les rapports de test
-            junit 'target/surefire-reports/TEST-*.xml'
-            
-            // enregistre les rapports JSON pour le build
-            cucumber '**/*.json'
-            
-            // enregistre les rapports HTML
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/cucumber', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: 'Rapport de tests cucumbers'])
-            
-            // publish la doc
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/generated-docs', reportFiles: 'demo-rest-back.html', reportName: 'Doc', reportTitles: 'documentation'])
-            
-            // publish la javadoc
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/site/apidocs', reportFiles: 'index.html', reportName: 'JavaDoc', reportTitles: 'JavaDoc'])
+            // enregistre toujours les rapports de test
+            junit 'target/surefire-reports/TEST-*.xml'           
+			
+			
+			// enregistre toujours les rapports JSON pour le build (pour voir les échecs)
+			cucumber '**/*.json'
+		
+			// enregistre les rapports HTML (pour voir les échecs)
+			publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/cucumber', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: 'Rapport de tests cucumbers'])
         }
     }
 }
