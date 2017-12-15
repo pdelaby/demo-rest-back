@@ -92,7 +92,8 @@ public class HeroAPIIntegrationStepdef {
 
 	@Then("^le système réponds une liste de héros$")
 	public void le_système_réponds_une_liste_de_héros() throws Throwable {
-		Assert.assertNotNull(heroes);
+		//Assert.assertNotNull(heroes);
+		Assert.fail();
 	}
 
 	@Then("^l'un d'entre eux s'appelle '(.+)'$")

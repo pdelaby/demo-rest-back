@@ -39,9 +39,4 @@ public class SameHeroIdPredicateTest {
 		Assert.assertFalse(subject.test(hero));
 	}
 
-	@Test
-	public void fail() {
-		Assert.fail();
-	}
-
 }
