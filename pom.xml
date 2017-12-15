@@ -43,49 +43,7 @@
 			</resource>
 		</resources>
 		<plugins>
-
-			<!-- Swagger -->
-			<!-- https://github.com/kongchen/swagger-maven-plugin/issues/467 -->
-			<plugin>
-				<groupId>com.github.kongchen</groupId>
-				<artifactId>swagger-maven-plugin</artifactId>
-				<version>3.1.5</version>
-				<configuration>
-					<apiSources>
-						<apiSource>
-							<schemes>http,https</schemes>
-							<!-- <basePath>/api</basePath> -->
-							<info>
-								<title>Hero Rest Demo</title>
-								<version>${project.version}</version>
-							</info>
-							<locations>
-								<location>com.pdy.fac.demorestback.hero.api</location>
-								<location>com.pdy.fac.demorestback.hero.api.HeroApi</location>
-								<location>com.pdy.fac.demorestback.hero.api.HeroApiController</location>
-								<location>com.pdy.fac.demorestback.version.api</location>
-								<location>com.pdy.fac.demorestback.version.api.VersionApi</location>
-							</locations>
-							<outputFormats>html</outputFormats>
-							<!-- <attachSwaggerArtifact>false</attachSwaggerArtifact> -->
-							<springmvc>false</springmvc>
-							<swaggerDirectory>${project.build.directory}/swagger-ui</swaggerDirectory>
-						</apiSource>
-					</apiSources>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- fin swagger -->
-
-
-
+		
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
