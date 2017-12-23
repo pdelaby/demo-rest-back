@@ -23,9 +23,13 @@ pipeline {
         
         stage('Package'){
             steps{
-                sh "mvn package"
-				archiveArtifacts artifacts: 'target/*.war'
+                sh "mvn package -dSkipTests=true"
             }
+			post{
+				always{
+					archiveArtifacts artifacts: 'target/*.war'
+				}
+			}
         }		
         
 		stage('Integration'){
@@ -45,7 +49,7 @@ pipeline {
         stage('Deploy'){
             steps{
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'tomcatdeploy', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-				    //  undeploy 
+					//  undeploy 
                     sh 'wget --http-user=$USERNAME --http-password=$PASSWORD "${deployUrl}/manager/text/undeploy?path=/demo-rest-back" -O -'
 					
 					// deploy
