@@ -23,7 +23,7 @@ pipeline {
         
         stage('Package'){
             steps{
-                sh "mvn package -dSkipTests=true"
+                sh "mvn package -DskipTests=true"
             }
 			post{
 				always{
