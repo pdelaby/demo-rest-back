@@ -5,16 +5,19 @@ pipeline {
         jdk 'jdk8u125'
     }
     environment {
-      def props = readProperties  file:'/var/lib/jenkins/jobconf/tomcat.properties'
-      def deployUrl= "${props['tomcat.deploy.url']}"
-      def tcatPath= "${props['tomcat.path']}"
+      def tcatProps = readProperties  file:'/var/lib/jenkins/jobconf/tomcat.properties'
+      def deployUrl= "${tcatProps['tomcat.deploy.url']}"
+      def tcatPath= "${tcatProps['tomcat.path']}"
+	  
+	  def apacheProps = readProperties  file:'/var/lib/jenkins/jobconf/apache.properties'
+	  def publicHtmlPath = "${apacheProps['apache.docpath']}"
 	  
 	  // obligatoire car il est impossible de resourdre workspace dans l'appel
       def warPath = "${workspace}/target"
     }
 	
-    stages {    
-                         
+    stages { 
+                        
         stage('Test'){
             steps{
                 sh "mvn clean test"
@@ -62,12 +65,14 @@ pipeline {
             parallel {
                 stage('Deploy asciidoc'){
                     steps{
-                        sh "cp target/generated-docs/* ${tcatPath}/webapps/demo-rest-back-doc"
+						sh "mkdir -p ${publicHtmlPath}/demo-rest-back-doc"
+                        sh "cp target/generated-docs/* ${publicHtmlPath}/demo-rest-back-doc"
                     }
                 }
                 stage('Deploy javadoc'){
                     steps{
-                        sh "cp -R target/site/apidocs/* ${tcatPath}/webapps/demo-rest-back-javadoc"
+						sh "mkdir -p ${publicHtmlPath}/demo-rest-back-javadoc"
+                        sh "cp -R target/site/apidocs/* ${publicHtmlPath}/demo-rest-back-javadoc"
                     }
                 }
             
