@@ -43,6 +43,14 @@ pipeline {
         }
     
 		
+		stage('Analyse SonarQube') {
+			steps{
+				withSonarQubeEnv('sonarqube') {      
+					sh "mvn sonar:sonar"
+				}
+			}
+		}
+		
         stage('Javadoc'){
             steps{
                 sh "mvn javadoc:javadoc"
