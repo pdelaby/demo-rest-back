@@ -34,15 +34,7 @@ pipeline {
 				}
 			}
         }		
-        
-		stage('Integration'){
-            steps{
-				// passe les tests d'integration
-                sh "mvn integration-test"				
-            }
-        }
-    
-		
+           		
 		stage('Analyse SonarQube') {
 			steps{
 				withSonarQubeEnv('sonarqube') {      
@@ -50,6 +42,13 @@ pipeline {
 				}
 			}
 		}
+		
+		stage('Integration'){
+            steps{
+				// passe les tests d'integration
+                sh "mvn integration-test"				
+            }
+        }
 		
         stage('Javadoc'){
             steps{
