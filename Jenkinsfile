@@ -109,6 +109,10 @@ pipeline {
 		
 			// enregistre les rapports HTML (pour voir les échecs)
 			publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/cucumber', reportFiles: 'index.html', reportName: 'Rapports cucumber', reportTitles: 'Rapport de tests cucumbers'])
+			
+			
+			// TOUJOURS TOUJORUS nettoyer le workspace
+			cleanWs()
         }
     }
 }
