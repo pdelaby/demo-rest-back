@@ -7,7 +7,7 @@ pipeline {
     
 	environment {
 		// définition du path qui sera utilisé dans tomcat et la doc 
-		def deployPath = 'demo-rest-back2'
+		def deployPath = 'demo-rest-back'
 
 		// obligatoire car il est impossible de resourdre workspace dans l'appel
 		def warPath = "${workspace}/target"
