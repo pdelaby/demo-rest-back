@@ -4,21 +4,40 @@ pipeline {
         maven 'M3' 
         jdk 'jdk8u125'
     }
-    environment {
-      def tcatProps = readProperties  file:'/var/lib/jenkins/jobconf/tomcat.properties'
-      def deployUrl= "${tcatProps['tomcat.deploy.url']}"
-      def tcatPath= "${tcatProps['tomcat.path']}"
-	  
-	  def apacheProps = readProperties  file:'/var/lib/jenkins/jobconf/apache.properties'
-	  def publicHtmlPath = "${apacheProps['apache.docpath']}"
-	  
-	  // obligatoire car il est impossible de resourdre workspace dans l'appel
-      def warPath = "${workspace}/target"
+    
+	environment {
+		// définition du path qui sera utilisé dans tomcat et la doc 
+		def deployPath = 'demo-rest-back2'
+
+		// obligatoire car il est impossible de resourdre workspace dans l'appel
+		def warPath = "${workspace}/target"
     }
 	
     stages { 
                         
-        stage('Test'){
+		stage('Env') {
+			steps{
+			    // récupération du fichier de configuration du tcat1, stocké dans Jenkins
+				configFileProvider([configFile(fileId:'tomcat1-conf', variable: 'tomcatConfFile')]) {
+					script{
+						// On assigne la valeur du fichier de conf à une variable d'environnement du Job
+						def tomcatConf = readJSON(text: readFile(file: tomcatConfFile))
+						env.deployUrl = "$tomcatConf.tomcat.deploy.url"
+					}
+				}
+				
+				// récupération du fichier de configuration d'apache
+				configFileProvider([configFile(fileId:'apache-conf', variable: 'apacheConfFile')]) {
+					script{
+						def apacheConf = readJSON(text: readFile(file: apacheConfFile))
+						env.publicApacheRoot = "$apacheConf.publichtml.root"
+						env.publicApacheDoc = "$apacheConf.publichtml.doc"
+					}
+				}
+			}
+		}
+		
+		stage('Test'){
             steps{
                 sh "mvn clean test"
             }
@@ -58,12 +77,12 @@ pipeline {
         
         stage('Deploy'){
             steps{
+			    // récupération des crédentaisl stockés dans jenkins
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'tomcatdeploy', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-					//  undeploy 
-                    sh 'wget --http-user=$USERNAME --http-password=$PASSWORD "${deployUrl}/manager/text/undeploy?path=/demo-rest-back" -O -'
 					
-					// deploy
-                    sh 'wget --http-user=$USERNAME --http-password=$PASSWORD "${deployUrl}/manager/text/deploy?war=file:${warPath}/demo-rest-back.war&path=/demo-rest-back" -O -'
+					// redéploiement en utilisant les identifiants et les paramètres de conf
+					sh 'curl -T "${warPath}/demo-rest-back.war" "http://$USERNAME:$PASSWORD@${deployUrl}/manager/text/deploy?path=/${deployPath}&update=true"'
+					
                 }
             }
         }
@@ -72,14 +91,14 @@ pipeline {
             parallel {
                 stage('Deploy asciidoc'){
                     steps{
-						sh "mkdir -p ${publicHtmlPath}/demo-rest-back-doc"
-                        sh "cp target/generated-docs/* ${publicHtmlPath}/demo-rest-back-doc"
+						sh "mkdir -p ${publicApacheDoc}/demo-rest-back-doc"
+                        sh "cp target/generated-docs/* ${publicApacheDoc}/demo-rest-back-doc"
                     }
                 }
                 stage('Deploy javadoc'){
                     steps{
-						sh "mkdir -p ${publicHtmlPath}/demo-rest-back-javadoc"
-                        sh "cp -R target/site/apidocs/* ${publicHtmlPath}/demo-rest-back-javadoc"
+						sh "mkdir -p ${publicApacheDoc}/demo-rest-back-javadoc"
+                        sh "cp -R target/site/apidocs/* ${publicApacheDoc}/demo-rest-back-javadoc"
                     }
                 }
             
