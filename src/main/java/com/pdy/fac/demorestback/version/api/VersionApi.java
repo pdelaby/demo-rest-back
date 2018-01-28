@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Controller
-@Api(value = "system")
+@Api
 @RequestMapping(value = "/version")
 public class VersionApi  {
 

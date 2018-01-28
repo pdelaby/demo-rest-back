@@ -48,7 +48,7 @@ pipeline {
                 sh "mvn package -DskipTests=true"
             }
 			post{
-				always{
+				success{
 					archiveArtifacts artifacts: 'target/*.war'
 				}
 			}
@@ -69,10 +69,24 @@ pipeline {
             }
         }
 		
-        stage('Javadoc'){
-            steps{
-                sh "mvn javadoc:javadoc"
-            }
+        stage('Génération de la doc technique'){
+			parallel {
+				stage('Javadoc'){
+					steps{
+						sh "mvn javadoc:javadoc"
+					}
+				}
+				stage('Swagger Api'){
+					steps{
+						sh "mvn com.github.kongchen:swagger-maven-plugin:generate"
+					}
+					post{
+						success{
+							archiveArtifacts artifacts: 'target/swagger-ui/*.yaml'
+						}
+					}
+				}
+			}
         }
         
         stage('Deploy'){
@@ -87,7 +101,7 @@ pipeline {
             }
         }
         
-        stage('Documentation'){
+        stage('Déploiement de la documentation'){
             parallel {
                 stage('Deploy asciidoc'){
                     steps{
