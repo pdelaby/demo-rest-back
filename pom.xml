@@ -1,317 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.pdy.fac</groupId>
-	<artifactId>demo-rest-back</artifactId>
-
-	<packaging>war</packaging>
-
-	<name>${project.artifactId}</name>
+	<artifactId>dockerdemo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<description>Projet back de test</description>
+	<packaging>jar</packaging>
 
-	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<springfox-version>2.6.1</springfox-version>
-
-		<!-- Test -->
-		<cucumber.version>1.2.5</cucumber.version>
-
-		<!-- Cucumber -->
-		<asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
-		<asciidoctorj.version>1.5.6</asciidoctorj.version>
-
-		<!-- javadoc sans problèmes -->
-		<additionalparam>-Xdoclint:none</additionalparam>
-	</properties>
+	<name>dockerdemo</name>
+	<description>Demo project for Spring Boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.7.RELEASE</version>
+		<version>2.1.0.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<!-- Le filtering va remplacer les références dans le application.yaml 
-			par les vraies version -->
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<plugins>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<!-- Skip the default running of this plug-in (or everything is run 
-						twice...see below) -->
-					<skip>true</skip>
-					<!-- Show 100% of the lines from the stack trace (doesn't work) -->
-					<trimStackTrace>false</trimStackTrace>
-				</configuration>
-				<executions>
-					<execution>
-						<id>unit-tests</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<!-- Never skip running the tests when the test phase is invoked -->
-							<skip>false</skip>
-							<includes>
-								<!-- Include unit tests within integration-test phase. -->
-								<include>**/*Test.java</include>
-							</includes>
-							<excludes>
-								<!-- Exclude integration tests within (unit) test phase. -->
-								<exclude>**/*IntegrationTest.java</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>integration-tests</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<!-- Never skip running the tests when the integration-test phase 
-								is invoked -->
-							<skip>false</skip>
-							<includes>
-								<!-- Include integration tests within integration-test phase. -->
-								<include>**/*IntegrationTest.java</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.asciidoctor</groupId>
-				<artifactId>asciidoctor-maven-plugin</artifactId>
-				<version>${asciidoctor.maven.plugin.version}</version>
-				<configuration>
-					<sourceDirectory>src/doc</sourceDirectory>
-
-					<!-- Attributes common to all output formats -->
-					<attributes>
-						<sourcedir>${project.build.sourceDirectory}</sourcedir>
-						<project-version>${project.version}</project-version>
-					</attributes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>asciidoc-to-html</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>process-asciidoc</goal>
-						</goals>
-						<configuration>
-							<backend>html5</backend>
-							<sourceHighlighter>coderay</sourceHighlighter>
-							<!-- Scenarios for linking vs embedding assets: Link to both stylesheets 
-								and images:: - don't set embedAssets option - set linkcss attribute to true 
-								- set imagesdir attribute to path relative to AsciiDoc source file <attributes> 
-								<linkcss>true</linkcss> <imagesdir>./images</imagesdir> </attributes> Embed 
-								stylesheets and images:: - set embedAssets option to true - don't set linkcss 
-								attribute - set imagesdir attribute to path relative to project root <embedAssets>true</embedAssets> 
-								<attributes> <imagesdir>src/docs/asciidoc/images</imagesdir> </attributes> 
-								Link to stylesheets but embed images:: - set embedAssets option to true - 
-								set linkcss attribute to true - set imagesdir attribute to path relative 
-								to project root <embedAssets>true</embedAssets> <attributes> <linkcss>true</linkcss> 
-								<imagesdir>src/docs/asciidoc/images</imagesdir> </attributes> Embed stylesheets 
-								but link images (default):: - don't set embedAssets option - don't set linkcss 
-								attribute - set imagesdir attribute to path relative to AsciiDoc source file 
-								<attributes> <imagesdir>./images</imagesdir> </attributes> IMPORTANT: When 
-								you enable image embedding, you must qualify the path the the imagesdir, 
-								as shown above. -->
-							<attributes>
-								<!-- <imagesdir>./images</imagesdir> -->
-								<toc>left</toc>
-								<icons>font</icons>
-								<sectanchors>true</sectanchors>
-								<!-- set the idprefix to blank -->
-								<idprefix />
-								<idseparator>-</idseparator>
-								<docinfo1>true</docinfo1>
-								<source-highlighter>coderay</source-highlighter>
-							</attributes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>com.github.kongchen</groupId>
-				<artifactId>swagger-maven-plugin</artifactId>
-				<version>3.1.6</version>
-				<configuration>
-					<apiSources>
-						<apiSource>
-							<springmvc>true</springmvc>
-							<locations>
-								<location>com.pdy.fac.demorestback.hero.api</location>
-								<location>com.pdy.fac.demorestback.version.api</location>
-							</locations>
-							<info>
-								<title>Démo Rest back</title>
-								<version>${project.version}</version>
-								<description>Projet de démo</description>
-							</info>
-							<outputFormats>yaml</outputFormats>
-							<swaggerDirectory>target/swagger-ui</swaggerDirectory>
-						</apiSource>
-					</apiSources>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
 
 	<dependencies>
-
-		<!-- In memory database -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-actuator</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>3.0.6</version>
-			<scope>test</scope>
-		</dependency>
-
-
-		<!-- Cucumber -->
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-spring</artifactId>
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-
-
-		<dependency>
-			<groupId>io.vavr</groupId>
-			<artifactId>vavr</artifactId>
-			<version>0.9.1</version>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!--SpringFox dependencies -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${springfox-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${springfox-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<!-- Bean Validation API support -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-
-
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 
 </project>
