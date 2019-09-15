@@ -1,0 +1,33 @@
+version: '3.5'
+services:
+  maxence:
+    image: m2gi/mongroupe:0.0.1-SNAPSHOT
+    networks:
+      #network pour traefik
+      - 'traefik-public'
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+      restart_policy:
+        max_attempts: 5
+      labels:
+        - traefik.frontend.rule=Host:groupe1.m2gi.win
+        - traefik.enable=true
+        - traefik.port=8086
+        - traefik.tags=traefik-public
+        - traefik.docker.network=traefik-public
+        # Traefik service that listens to HTTP
+        - traefik.redirectorservice.frontend.entryPoints=http
+        - traefik.redirectorservice.frontend.redirect.entryPoint=https
+        # Traefik service that listens to HTTPS
+        - traefik.webservice.frontend.entryPoints=https
+        # Configuration du CSP pour faire fonctionner la captcha google
+    depends_on:
+      - traefik
+
+
+networks:
+  traefik-public:
+    external: true
