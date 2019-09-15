@@ -15,7 +15,7 @@ services:
       labels:
         - traefik.frontend.rule=Host:groupe1.m2gi.win
         - traefik.enable=true
-        - traefik.port=8086
+        - traefik.port=8080
         - traefik.tags=traefik-public
         - traefik.docker.network=traefik-public
         # Traefik service that listens to HTTP
